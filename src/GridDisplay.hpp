@@ -106,9 +106,12 @@ struct GridDisplay : BaseDisplayWidget {
     }
 
     void drawLayer(const DrawArgs& args, int layer) override {
-        if (layer != 1) {
-            this->drawBackground(args);
-        }
+        if (layer != 1) return;
+        // Dim the display but don't darken it completely
+        float b = std::max(0.2f, settings::rackBrightness);
+        nvgGlobalAlpha(args.vg, b);
+
+        this->drawBackground(args);
 
         if (this->consumer->patternFlashNeg != -1) {
             this->flashes[this->consumer->patternFlashNeg] = -1.f;

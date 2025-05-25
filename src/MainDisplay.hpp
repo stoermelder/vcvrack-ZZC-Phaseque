@@ -383,9 +383,12 @@ struct MainDisplayWidget : BaseDisplayWidget {
     }
 
     void drawLayer(const DrawArgs& args, int layer) override {
-        if (layer != 1) {
-            drawBackground(args);
-        }
+        if (layer != 1) return;
+        // Dim the display but don't darken it completely
+        float b = std::max(0.2f, settings::rackBrightness);
+        //nvgGlobalTint(args.vg, nvgRGBAf(b, b, b, 1.f));
+        nvgGlobalAlpha(args.vg, b);
+        drawBackground(args);
 
         for (int i = 1; i < NUM_STEPS; i++) {
             drawDash(args, Vec(padding + i * stepX, padding + dashLine1));
